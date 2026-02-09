@@ -1,0 +1,31 @@
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
+# The AssetDatabase3 exported by Unity
+[Aa]ssets/**/assetdatabase3
+# Automatically generated .csproj, .sln, etc.
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+# Unity crash dumps
+sysinfo.txt
+# Builds
+*.apk
+*.aab
+*.unitypackage
