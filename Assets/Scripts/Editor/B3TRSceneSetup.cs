@@ -8,10 +8,12 @@ public class B3TRSceneSetup : EditorWindow
     {
         GameObject root = new GameObject("B3TR_Environment");
 
-        // Use a safe shader lookup
-        Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-        if (!shader) shader = Shader.Find("Universal Render Pipeline/Simple Lit");
-        if (!shader) shader = Shader.Find("Standard"); // Fallback for safety
+        // Load the actual material assets we just made
+        Material matOcean = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Ocean.mat");
+        Material matSand = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Sand.mat");
+        Material matRiver = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/River.mat");
+        Material matGrass = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Grass.mat");
+        Material matTree = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/TreeTrunk.mat");
 
         // Ocean
         GameObject ocean = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -19,7 +21,7 @@ public class B3TRSceneSetup : EditorWindow
         ocean.transform.parent = root.transform;
         ocean.transform.localScale = new Vector3(20, 1, 20);
         ocean.transform.position = new Vector3(0, -0.5f, 0);
-        SetColor(ocean, new Color(0, 0.5f, 1f, 0.8f), shader);
+        SetMat(ocean, matOcean);
 
         // Beach
         GameObject beach = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -27,7 +29,7 @@ public class B3TRSceneSetup : EditorWindow
         beach.transform.parent = root.transform;
         beach.transform.localScale = new Vector3(20, 1, 10);
         beach.transform.position = new Vector3(0, 0, -10);
-        SetColor(beach, new Color(1f, 0.9f, 0.6f), shader);
+        SetMat(beach, matSand);
 
         // River
         GameObject river = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -35,7 +37,7 @@ public class B3TRSceneSetup : EditorWindow
         river.transform.parent = root.transform;
         river.transform.localScale = new Vector3(4, 0.8f, 20);
         river.transform.position = new Vector3(10, -0.1f, 0);
-        SetColor(river, new Color(0, 0.3f, 0.8f), shader);
+        SetMat(river, matRiver);
 
         // Forest
         GameObject forest = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -43,18 +45,30 @@ public class B3TRSceneSetup : EditorWindow
         forest.transform.parent = root.transform;
         forest.transform.localScale = new Vector3(20, 1, 10);
         forest.transform.position = new Vector3(0, 0, 10);
-        SetColor(forest, new Color(0.1f, 0.6f, 0.2f), shader);
+        SetMat(forest, matGrass);
 
-        Debug.Log("B3TR Environment Generated!");
+        // Trees
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject tree = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            tree.name = $"Tree_{i}";
+            tree.transform.parent = forest.transform;
+            float x = Random.Range(-9f, 9f);
+            float z = Random.Range(5f, 14f);
+            tree.transform.position = new Vector3(x, 1, z);
+            tree.transform.localScale = new Vector3(0.5f, 2, 0.5f);
+            SetMat(tree, matTree);
+        }
+
+        Debug.Log("B3TR Environment Generated with Fixed Materials!");
     }
 
-    static void SetColor(GameObject go, Color c, Shader s)
+    static void SetMat(GameObject go, Material mat)
     {
         var renderer = go.GetComponent<Renderer>();
-        if (renderer != null)
+        if (renderer != null && mat != null)
         {
-            renderer.sharedMaterial = new Material(s);
-            renderer.sharedMaterial.color = c;
+            renderer.sharedMaterial = mat;
         }
     }
 }
